@@ -1,8 +1,12 @@
 [tool.poetry]
 name = "hannah"
-version = "0.0.1"
+version = "0.0.2"
 description = ""
 authors = ["suganthsundar <suganthsundar@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/suganthsundar/hannah"
+repository = "https://github.com/suganthsundar/hannah"
 
 [tool.poetry.dependencies]
 python = "^3.7"

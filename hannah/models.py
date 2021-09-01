@@ -16,16 +16,15 @@ def http_request_template(http_session, op: SwaggerOperation):
         headers: dict = {k: v for k, v in kwargs.items() if k in op.headers}
         payload = kwargs.get('requestBody', kwargs.get(op.body, {}))
 
-        if 'headers' in kwargs:
-            headers.update(**kwargs['headers'])
+        for param in kwargs.get('parameters', []):
+            if param['in'] == 'path':
+                path_params.update(**{param['name']: param['value']})
+            if param['in'] == 'query':
+                query_params.update(**{param['name']: param['value']})
+            if param['in'] == 'header':
+                headers.update(**{param['name']: param['value']})
 
-        if 'params' in kwargs:
-            query_params.update(**kwargs['params'])
-
-        if 'path_params' in kwargs:
-            path_params.update(**kwargs['path_params'])
-
-        return await http_session.request(op.method, op.uri % path_params, params=query_params,
+        return await http_session.request(op.method, op.uri.format(**path_params), params=query_params,
                                           json=payload, headers=headers, timeout=120)
 
     return request_wrapper

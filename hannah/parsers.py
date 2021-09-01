@@ -21,7 +21,7 @@ class SwaggerOperation:
         self.resource_dict = resource_dict
 
     def get_params(self, type: str):
-        return [param['name'] for param in self.resource_dict['parameters'] if param['type'] == type]
+        return [param['name'] for param in self.resource_dict['parameters'] if param['in'] == type]
 
     @property
     def id(self) -> str:
