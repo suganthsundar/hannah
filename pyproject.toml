@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hannah"
-version = "0.0.3"
+version = "0.0.4"
 description = ""
 authors = ["suganthsundar <suganthsundar@gmail.com>"]
 license = "MIT"
