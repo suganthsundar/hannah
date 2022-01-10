@@ -16,7 +16,8 @@ class HTTPSession:
                  headers: dict = None,
                  ssl_verify: bool = False,
                  raise_on_non_2xx_error: bool = False,
-                 request_limit: int = REQUEST_RATE_LIMIT):
+                 request_limit: int = REQUEST_RATE_LIMIT,
+                 timeout: float = 10.0):
         self.id = uuid.uuid4()
         self.name = name
         self.base_url = base_url
@@ -24,6 +25,7 @@ class HTTPSession:
         self.ssl_verify = ssl_verify
         self.raise_on_non_2xx_error = raise_on_non_2xx_error
         self.semaphore = asyncio.Semaphore(request_limit)
+        self.timeout = timeout
         if auth:
             self.set_auth(*auth)
 
@@ -38,7 +40,7 @@ class HTTPSession:
 
     async def request(self, method: str, uri: str, **kwargs):
         async with self.semaphore:
-            async with httpx.AsyncClient(headers=self.headers) as client:
+            async with httpx.AsyncClient(headers=self.headers, timeout=self.timeout) as client:
                 r = await client.request(method, f'{self.base_url}{uri}', **kwargs)
                 if self.raise_on_non_2xx_error and (r.status_code < 200 or r.status_code >= 300):
                     raise HTTPStatusError(HTTPTrafficMapper(r))

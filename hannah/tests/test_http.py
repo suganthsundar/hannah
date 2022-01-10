@@ -32,3 +32,9 @@ async def test_404_not_found_with_raise_status_error():
     with pytest.raises(HTTPStatusError):
         s = HTTPSession(name, url, raise_on_non_2xx_error=True)
         await s.request('GET', '/api/user/unknown')
+
+
+@pytest.mark.asyncio
+async def test_request_limit():
+    s = HTTPSession(name, url, raise_on_non_2xx_error=True, request_limit=10)
+    assert s.semaphore._value == 10
