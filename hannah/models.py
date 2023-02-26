@@ -32,17 +32,15 @@ def http_request_template(http_session, op: SwaggerOperation):
 
 class SwaggerService:
 
-    def __init__(self, name: str, base_url: str, http_session=None, spec: dict=None):
+    def __init__(self, name: str, http_session=None, spec: dict=None):
         self.name = name
-        self.base_url = base_url
         self.http_session = http_session
         self.swagger_spec = spec
-        http_session.set_base_url(self.base_url)
 
     @classmethod
     def from_url(cls, name: str, base_url: str, http_session=None, swagger_path=None):
         spec = cls.get_api_doc(f'{base_url}{swagger_path}')
-        return cls(name, base_url, http_session, spec)
+        return cls(name, http_session, spec)
 
     @cached_property
     def swagger(self) -> SwaggerParser:
