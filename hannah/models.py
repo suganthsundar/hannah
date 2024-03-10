@@ -15,6 +15,8 @@ def http_request_template(http_session, op: SwaggerOperation):
         query_params: dict = {k: v for k, v in kwargs.items() if k in op.query_params}
         headers: dict = {k: v for k, v in kwargs.items() if k in op.headers}
         payload = kwargs.get('requestBody', kwargs.get(op.body, {}))
+        if 'headers' in kwargs:
+            headers.update(kwargs['headers'])
 
         for param in kwargs.get('parameters', []):
             if param['in'] == 'path':
